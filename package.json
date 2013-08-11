@@ -9,6 +9,8 @@
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "LiveScript": "~1.2.0"
+    "LiveScript": "~1.2.0",
+    "q": "~0.9.6",
+    "q-io": "~1.9.1"
   }
 }
