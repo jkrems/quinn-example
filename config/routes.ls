@@ -1,11 +1,11 @@
 
-require! quinn.controller
-require! quinn.config
 require! quinn.respond
+require! quinn.inject.action
 
 module.exports = (app) ->
-  app.get '/', controller 'news-feed'
+  app.get '/', -> respond.redirect '/news-feed'
+  app.get '/news-feed', 'news-feed'
 
-  app.get '/config', (req) -> respond.json config.current
-  app.get '/cookies', (req) ->
-    respond.json req{cookies, session}
+  app.get '/config', action (config) -> respond.json config.current
+  app.get '/cookies', action (cookies, session) ->
+    respond.json {cookies, session}

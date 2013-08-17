@@ -3,3 +3,4 @@
 reference/
 /*.log
 config/local.ls
+.DS_Store

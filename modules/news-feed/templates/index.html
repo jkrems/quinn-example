@@ -1,0 +1,45 @@
+{% extends 'news-feed/layout' %}
+
+{% block content %}
+
+  <style type="text/css">
+  img.avatar { position: absolute; margin-left: -60px; margin-top: 10px; }
+  </style>
+
+  <div class="jumbotron">
+{% when user %}
+    <h1>Hello, {{user.first_name}}!</h1>
+    <p class="lead">This is a small demo of loading the facebook stream of a user.</p>
+    <a class="btn btn-large btn-success" href="#">See the source</a>
+{% endwhen %}
+  </div>
+
+  <hr>
+
+{% when posts %}
+  {% for post in posts %}
+    <div class="row-fluid marketing">
+      <div class="span12">
+        <img src="https://graph.facebook.com/{{post.from.id}}/picture" class="avatar" />
+        <h5>{{post.from.name}}{% if post.to %} → {{post.to.name}}{% endif %}</h5>
+        {% if post.message %}<p>{{post.message}}</p>{% endif %}
+        {% if post.picture %}
+          <div>
+            {% if post.link %}
+              <a href="{{post.link}}" target="_blank" class="pull-left"><img src="{{post.picture}}" style="margin-right: 10px;" /></a>
+              <a href="{{post.link}}" target="_blank">
+                {{post.name}}<br/>
+                {{post.caption}}
+              </a>
+              <p>{{post.description}}</p>
+            {% else %}
+              <img src="{{post.picture}}" class="pull-left" style="margin-right: 10px;" />
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endwhen %}
+
+{% endblock %}
