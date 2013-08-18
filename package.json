@@ -11,6 +11,6 @@
   "dependencies": {
     "LiveScript": "~1.2.0",
     "q": "~0.9.6",
-    "quinn": "*"
+    "quinn": "git://github.com/jkrems/quinn.git#master"
   }
 }
