@@ -6,15 +6,17 @@
   img.avatar { position: absolute; margin-left: -60px; margin-top: 10px; }
   </style>
 
-  <div class="jumbotron">
 {% when user %}
-    <h1>Hello, {{user.first_name}}!</h1>
-    <p class="lead">This is a small demo of loading the facebook stream of a user.</p>
-    <a class="btn btn-large btn-success" href="#">See the source</a>
-{% endwhen %}
+  <div class="jumbotron" style="background: url({{user.cover.source}}) top center;">
+    <div style="background-color: rgba(255,255,255,0.4);">
+      <h1>{{ _t('.hello_x', 'name', user.first_name) }}</h1>
+      <p class="lead">{{ _t('.description') }}</p>
+    </div>
+    <a class="btn btn-large btn-success" href="#">{{ _t('.see_source') }}</a>
   </div>
+{% endwhen %}
 
-  <hr>
+  <hr style="margin: 0" />
 
 {% when posts %}
   {% for post in posts %}

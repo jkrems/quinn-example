@@ -1,0 +1,5 @@
+{
+  "hello_x": "Hello, %{name}!",
+  "description": "This is a small demo of loading the facebook stream of a user.",
+  "see_source": "See the source"
+}

@@ -40,7 +40,7 @@ get-access-token = Q.promised ({absoluteUrl, query, session}, config, graph-api)
     throw new Error 'User not found'
 
 user-from-token = (graph-api, access_token) ->
-  graph-api '/me', qs: { fields: 'id,name,first_name,last_name' } .asJson
+  graph-api '/me', qs: { fields: 'id,name,first_name,last_name,gender,cover,picture' } .asJson
 
 module.exports = authenticated = (handler) ->
   action (req, params, config, service) ->
@@ -48,8 +48,6 @@ module.exports = authenticated = (handler) ->
     get-access-token req, config, graph-api .then(
       ({access_token}) ->
         req.session.fb_token = access_token
-        user = user-from-token graph-api, access_token
-        req.quinn-ext <<< {user}
         handler req, params
     , (err) ->
         login-url = login-redirect-url req, config
