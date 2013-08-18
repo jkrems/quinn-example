@@ -10,6 +10,8 @@ let /* quinn: the web framework we are using */
 
     lazyMap = require('quinn/harmony').lazyMap,
 
+    async = require('quinn/harmony').wrapGenerator,
+
     /* `authenticated` is a request handler decorator (like `action`).
        It will check if the current user is properly authenticated,
        redirect to the proper Facebook auth url, do the whole "exchange
@@ -60,10 +62,10 @@ this.index = authenticated(action(function* (service, render, page) {
           via .next() - so if the outer function (this one) yields the
           promise, the will never be more than n concurrent requests */
   let friends = graphApi('/me/friends?fields=id').asJson.get('data').invoke('slice', 0, 10);
-  let loadFriendName = function* (friend) {
+  let loadFriendName = async(function* (friend) {
     let response = yield graphApi('/' + friend.id + '?fields=name').asJson;
     return response.name;
-  };
+  });
   let iterator = yield lazyMap(friends, loadFriendName, 5),
       current;
   while (current = iterator.next()) {
