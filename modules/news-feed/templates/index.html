@@ -23,7 +23,7 @@
     <div class="row-fluid marketing">
       <div class="span12">
         <img src="https://graph.facebook.com/{{post.from.id}}/picture" class="avatar" />
-        <h5>{{post.from.name}}{% if post.to %} → {{post.to.name}}{% endif %}</h5>
+        <h5>{{post.from.name}}{% if post.to %} → {{post.to.data[0].name}}{% endif %}</h5>
         {% if post.message %}<p>{{post.message}}</p>{% endif %}
         {% if post.picture %}
           <div>
