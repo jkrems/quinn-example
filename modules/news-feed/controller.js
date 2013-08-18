@@ -8,6 +8,8 @@ let /* quinn: the web framework we are using */
        cleanly what we need to create that result. */
     action  = quinn.inject.action,
 
+    lazyMap = require('quinn/harmony').lazyMap,
+
     /* `authenticated` is a request handler decorator (like `action`).
        It will check if the current user is properly authenticated,
        redirect to the proper Facebook auth url, do the whole "exchange
@@ -48,6 +50,25 @@ this.index = authenticated(action(function* (service, render, page) {
      using normal try/catch blocks. */
   let gender = yield user.get('gender');
   page.backgroundColor = gender === 'female' ? '#f2f7fc' : '#ddeacf';
+
+  /*  Semantics of async.queue using promises and generators. The idea is
+      the following:
+      1.) lazyMap takes a collection, a function and a buffer size
+      2.) lazyMap returns an iterator over the mapped results
+      3.) lazyMap will pre-call the function according to the buffer size
+      4.) lazyMap will only fetch more data when the iterator is continued
+          via .next() - so if the outer function (this one) yields the
+          promise, the will never be more than n concurrent requests */
+  let friends = graphApi('/me/friends?fields=id').asJson.get('data').invoke('slice', 0, 10);
+  let loadFriendName = function (friend) {
+    return graphApi('/' + friend.id + '?fields=name').asJson.get('name');
+  };
+  let iterator = lazyMap(yield friends, loadFriendName, 5),
+      current;
+  while (current = iterator.next()) {
+    if (current.done) break;
+    console.log('One friend name:', yield current.value);
+  }
 
   /* It's time to set data on our page model. This exports the data to our
      template. Look out for {% when x %} in the template. Those blocks mark
