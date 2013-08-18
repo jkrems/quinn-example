@@ -60,10 +60,11 @@ this.index = authenticated(action(function* (service, render, page) {
           via .next() - so if the outer function (this one) yields the
           promise, the will never be more than n concurrent requests */
   let friends = graphApi('/me/friends?fields=id').asJson.get('data').invoke('slice', 0, 10);
-  let loadFriendName = function (friend) {
-    return graphApi('/' + friend.id + '?fields=name').asJson.get('name');
+  let loadFriendName = function* (friend) {
+    let response = yield graphApi('/' + friend.id + '?fields=name').asJson;
+    return response.name;
   };
-  let iterator = lazyMap(yield friends, loadFriendName, 5),
+  let iterator = yield lazyMap(friends, loadFriendName, 5),
       current;
   while (current = iterator.next()) {
     if (current.done) break;
